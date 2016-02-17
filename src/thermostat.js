@@ -1,16 +1,34 @@
 function Thermostat() {
   this.temperature = 20;
   this.powerSaving = true;
-  this.minTemp     = 10;
-  this.maxTemp     = this.powerSaving ? 25 : 32;
+  this.MIN_TEMP    = 10;
+  this.MAX_TEMP_ON  = 25;
+  this.MAX_TEMP_OFF  = 32;
 }
 
 Thermostat.prototype.up = function () {
-  this.temperature += 1;
+  if(this.powerSaving === true) {
+    if(this.temperature >= this.MAX_TEMP_ON ) {
+      throw "Can't go above max temperature";
+    } else {
+      this.temperature++;
+    }
+  }
+  else if(this.powerSaving === false) {
+    if(this.temperature >= this.MAX_TEMP_OFF ) {
+      throw "Can't go above max temperature";
+    } else {
+      this.temperature++;
+    }
+  }
 };
 
 Thermostat.prototype.down = function () {
-  this.temperature -= 1;
+  if(this.temperature <= this.MIN_TEMP) {
+    throw "Can't go below min temperature";
+  } else {
+    this.temperature--;
+  }
 };
 
 Thermostat.prototype.switchPowerSaving = function () {
@@ -22,15 +40,11 @@ Thermostat.prototype.reset = function () {
 };
 
 Thermostat.prototype.energyUsage = function () {
-  var usageLevel;
-
   if (this.temperature >= 25) {
-    usageLevel = Symbol.for("high");
+    return "high";
   } else if (this.temperature >= 18) {
-    usageLevel = Symbol.for("medium");
+    return "medium";
   } else {
-    usageLevel = Symbol.for("low");
+    return "low";
   }
-
-  return usageLevel;
 };
